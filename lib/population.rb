@@ -1,7 +1,7 @@
 require 'genome'
 
 class Population
-  attr_accessor :mutation_rate, :keep_alive_rate
+  attr_accessor :mutation_rate, :keep_alive_rate, :fitness_target
   def evaluate
     @karyotypes.each { |k| k.fitness = @fitness_calculator.call(k) }
     @karyotypes.sort! { |x,y| x.fitness <=> y.fitness }
@@ -15,13 +15,18 @@ class Population
     self.evaluate
   end
   
-  def set_mutation_rate(new_rate)
-    @mutation_rate = new_rate
+  def set_mutation_rate(rate)
+    @mutation_rate = rate
     self
   end
   
-  def set_keep_alive_rate(new_rate)
-    @keep_alive_rate = new_rate
+  def set_keep_alive_rate(rate)
+    @keep_alive_rate = rate
+    self
+  end
+  
+  def set_fitness_target(target)
+    @fitness_target = target
     self
   end
   
@@ -39,7 +44,7 @@ class Population
 
   def random_select
     @karyotypes[
-      Integer(Math.sqrt(Math.sqrt(rand(@karyotypes.size**4))))
+      @karyotypes.size - Integer(Math.sqrt(Math.sqrt(rand(@karyotypes.size**4))))
     ]
   end
   
@@ -48,8 +53,20 @@ class Population
   end
   
   def evolve(iterations = 1)
-    (1..iterations).each { self.evolve_impl }
+    if @fitness_target.nil? then
+      (1..iterations).each {
+        self.evolve_impl
+        break if (!@fitness_target.nil?) && (@fitness_target > @karyotypes[0].fitness)
+      }
+    else
+      i = 1
+      while (i <= iterations) && (@fitness_target > @karyotypes[0].fitness) do
+        self.evolve_impl
+        i += 1
+      end
+    end
   end
+  
   def evolve_impl
     new_population = nil
     # Keeping alive a specific amount of the best karyotypes

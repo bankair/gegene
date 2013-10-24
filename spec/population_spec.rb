@@ -63,4 +63,22 @@ describe Population do
     expect(set_function_return).to eq population
     expect(population.keep_alive_rate).to eq 0.3
   end
+  
+  it "has a fitness target which default value is nil" do
+    population = Population.new(200, @genome, @counter.method(:increment))
+    expect(population.fitness_target.nil?).to be_true
+    expect(@counter.value).to eq 200
+    population.evolve()
+    expect(@counter.value).to eq 400
+    population.fitness_target = 99999
+    expect(population.fitness_target).to eq 99999
+    population.evolve(2)
+    expect(@counter.value).to eq 800
+    set_function_return = population.set_fitness_target(900)
+    expect(set_function_return).to eq population
+    expect(population.fitness_target).to eq 900
+    @karyotype.stub(:fitness){1000}
+    population.evolve(3)
+    expect(@counter.value).to eq 800
+  end
 end
