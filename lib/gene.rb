@@ -27,9 +27,7 @@ end
 class IntegerGene < NumericGene
   def initialize(min, max) super(min, max) end
   
-  def random_allele_value
-    rand(max - self.min + 1) + self.min
-  end
+  def random_allele_value() rand(self.min..self.max) end
 end
 
 class FloatGene < NumericGene
