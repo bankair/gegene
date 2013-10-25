@@ -13,7 +13,15 @@ describe Genome do
     lambda {gene = Genome.new("Oh, crap !")}.should raise_error
   end
   
-  it "can create random Karyotypes"
+  it "can create random Karyotypes" do
+    genome = Genome.new([
+        {ival_0_0: Gene.Integer(0, 255),
+         ival_0_1: Gene.Integer(0, 255)},
+        {ival_1_0: Gene.Integer(0, 255),
+         ival_1_1: Gene.Integer(0, 255)}])
+    karyotype = genome.create_random_karyotype()
+    expect(karyotype.class).to eq Karyotype
+  end
   
   it "is able to give the position (2 integers) of a named gene" do
     genome = Genome.new([

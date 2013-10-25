@@ -20,4 +20,8 @@ class Genome
     @gene_positions[gene_name]
   end
   
+  def create_random_karyotype
+    Karyotype.create_random_from(self, @chromosomes_description)
+  end
+  
 end
