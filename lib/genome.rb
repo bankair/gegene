@@ -15,7 +15,7 @@ class Genome
       @chromosomes_description << gene_array
     end
   end
-  
+  attr_accessor :gene_positions
   def get_gene_position(gene_name)
     @gene_positions[gene_name]
   end

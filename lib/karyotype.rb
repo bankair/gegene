@@ -1,6 +1,7 @@
 require 'chromosome'
 class Karyotype
   attr_accessor :chromosomes
+  attr_accessor :fitness
   def initialize(genome, chromosomes_description)
     @genome = genome
     @chromosomes_description = chromosomes_description
@@ -11,7 +12,9 @@ class Karyotype
     karyotype.chromosomes = self.chromosomes.map{|chromosome| chromosome.copy}
     karyotype
   end
-  
+  def to_s
+    @genome.gene_positions.keys.map{|gn| "#{gn}=>#{self[gn]}"}.join';'
+  end
   def Karyotype.create_random_from(genome, chromosomes_description)
     karyotype = Karyotype.new(genome, chromosomes_description)
     karyotype.chromosomes = chromosomes_description.map {|description|
@@ -27,7 +30,16 @@ class Karyotype
     return @chromosomes[chromosome_position][gene_position].value
   end
   
+  def +(other)
+    child = copy
+    other.chromosomes.each_with_index {
+      |chromosome, index| child.chromosomes[index] = chromosome if rand(2) == 0
+    }
+    child
+  end
+  
   def mutate
     @chromosomes[rand @chromosomes.size].mutate
+    self
   end
 end

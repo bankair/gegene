@@ -5,11 +5,11 @@ class Population
   DEFAULT_KEEP_ALIVE_RATE = 0.1
   DEFAULT_EVOLVE_ITERATIONS = 1
   
-  attr_accessor :mutation_rate, :keep_alive_rate, :fitness_target
+  attr_accessor :mutation_rate, :keep_alive_rate, :fitness_target, :karyotypes
 
   def evaluate
-    @karyotypes.each { |k| k.fitness = @fitness_calculator.call(k) }
-    @karyotypes.sort! { |x,y| x.fitness <=> y.fitness }
+    @karyotypes.each { |k| k.fitness ||= @fitness_calculator.call(k) }
+    @karyotypes.sort! { |x,y| y.fitness <=> x.fitness }
   end
   
   private :evaluate
@@ -17,7 +17,7 @@ class Population
   def initialize(size, genome, fitness_calculator)
     @mutation_rate = DEFAULT_MUTATION_RATE
     @keep_alive_rate = DEFAULT_KEEP_ALIVE_RATE
-    @genome = genome
+    @genome = Genome.new(genome)
     @fitness_calculator = fitness_calculator
     @karyotypes = Array.new(size){ @genome.create_random_karyotype }
     evaluate
@@ -47,14 +47,14 @@ class Population
   end
     
   def create_random_mutation
-    linear_random_select.clone.mutate
+    linear_random_select.copy.mutate
   end
 
   private :linear_random_select, :create_random_mutation
 
   def random_select
     @karyotypes[
-      @karyotypes.size - Integer(Math.sqrt(Math.sqrt(rand(@karyotypes.size**4))))
+      @karyotypes.size - Integer(Math.sqrt(Math.sqrt(1 + rand(@karyotypes.size**4 - 1))))
     ]
   end
   
@@ -74,21 +74,20 @@ private :random_select, :random_breed
   end
   
   def evolve_impl
-    new_population = nil
+    new_population = []
     # Keeping alive a specific amount of the best karyotypes
     keep_alive_count = Integer(@karyotypes.size * @keep_alive_rate)
     if keep_alive_count > 0 then
-      new_population = @karyotypes[0, keep_alive_count]
-    else
-      new_population = []
+      new_population << @karyotypes[0, keep_alive_count]
     end
     mutation_count = Integer(@karyotypes.size * @mutation_rate)
     (0..mutation_count-1).each {
-      new_population.push(create_random_mutation)
+      new_population << create_random_mutation
     }
     remaining = @karyotypes.size-mutation_count-keep_alive_count
     (0..remaining-1).each {
-      new_population.push(random_breed)
+      child = random_breed
+      new_population << child
     }
     @karyotypes = new_population
     evaluate
