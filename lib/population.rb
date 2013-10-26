@@ -1,14 +1,20 @@
 require 'genome'
 
 class Population
+  DEFAULT_MUTATION_RATE = 0.01
+  DEFAULT_KEEP_ALIVE_RATE = 0.1
+  DEFAULT_EVOLVE_ITERATIONS = 1
+  
   attr_accessor :mutation_rate, :keep_alive_rate, :fitness_target
+
   def evaluate
     @karyotypes.each { |k| k.fitness = @fitness_calculator.call(k) }
     @karyotypes.sort! { |x,y| x.fitness <=> y.fitness }
   end
+
   def initialize(size, genome, fitness_calculator)
-    @mutation_rate = 0.01
-    @keep_alive_rate = 0.1
+    @mutation_rate = DEFAULT_MUTATION_RATE
+    @keep_alive_rate = DEFAULT_KEEP_ALIVE_RATE
     @genome = genome
     @fitness_calculator = fitness_calculator
     @karyotypes = Array.new(size){ @genome.create_random_karyotype }
@@ -52,7 +58,7 @@ class Population
     random_select + random_select
   end
   
-  def evolve(iterations = 1)
+  def evolve(iterations = DEFAULT_EVOLVE_ITERATIONS)
     i = 1
     while (i <= iterations) &&
       (@fitness_target.nil? || @fitness_target > @karyotypes[0].fitness) do
