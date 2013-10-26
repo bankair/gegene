@@ -11,14 +11,16 @@ class Population
     @karyotypes.each { |k| k.fitness = @fitness_calculator.call(k) }
     @karyotypes.sort! { |x,y| x.fitness <=> y.fitness }
   end
-
+  
+  private :evaluate
+  
   def initialize(size, genome, fitness_calculator)
     @mutation_rate = DEFAULT_MUTATION_RATE
     @keep_alive_rate = DEFAULT_KEEP_ALIVE_RATE
     @genome = genome
     @fitness_calculator = fitness_calculator
     @karyotypes = Array.new(size){ @genome.create_random_karyotype }
-    self.evaluate
+    evaluate
   end
   
   def set_mutation_rate(rate)
@@ -43,10 +45,12 @@ class Population
   def linear_random_select
     @karyotypes[rand @karyotypes.size]
   end
-  
+    
   def create_random_mutation
     linear_random_select.clone.mutate
   end
+
+  private :linear_random_select, :create_random_mutation
 
   def random_select
     @karyotypes[
@@ -57,12 +61,14 @@ class Population
   def random_breed
     random_select + random_select
   end
+
+private :random_select, :random_breed
   
   def evolve(iterations = DEFAULT_EVOLVE_ITERATIONS)
     i = 1
     while (i <= iterations) &&
       (@fitness_target.nil? || @fitness_target > @karyotypes[0].fitness) do
-      self.evolve_impl
+      evolve_impl
       i += 1
     end
   end
@@ -78,14 +84,15 @@ class Population
     end
     mutation_count = Integer(@karyotypes.size * @mutation_rate)
     (0..mutation_count-1).each {
-      new_population.push(self.create_random_mutation)
+      new_population.push(create_random_mutation)
     }
     remaining = @karyotypes.size-mutation_count-keep_alive_count
     (0..remaining-1).each {
       new_population.push(random_breed)
     }
     @karyotypes = new_population
-    self.evaluate
+    evaluate
   end
+  private :evolve_impl
 
 end
