@@ -71,6 +71,7 @@ private :random_select, :random_breed
       evolve_impl
       i += 1
     end
+    self
   end
   
   def evolve_impl
