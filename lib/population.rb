@@ -53,17 +53,11 @@ class Population
   end
   
   def evolve(iterations = 1)
-    if @fitness_target.nil? then
-      (1..iterations).each {
-        self.evolve_impl
-        break if (!@fitness_target.nil?) && (@fitness_target > @karyotypes[0].fitness)
-      }
-    else
-      i = 1
-      while (i <= iterations) && (@fitness_target > @karyotypes[0].fitness) do
-        self.evolve_impl
-        i += 1
-      end
+    i = 1
+    while (i <= iterations) &&
+      (@fitness_target.nil? || @fitness_target > @karyotypes[0].fitness) do
+      self.evolve_impl
+      i += 1
     end
   end
   
