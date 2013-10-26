@@ -8,7 +8,7 @@ class Population
   attr_accessor :mutation_rate, :keep_alive_rate, :fitness_target, :karyotypes
 
   def evaluate
-    @karyotypes.each { |k| k.fitness ||= @fitness_calculator.call(k) }
+    @karyotypes.each { |k| k.fitness = @fitness_calculator.call(k) if k.fitness.nil? }
     @karyotypes.sort! { |x,y| y.fitness <=> x.fitness }
   end
   
@@ -75,20 +75,24 @@ private :random_select, :random_breed
   end
   
   def evolve_impl
-    new_population = []
+    new_population = []    
+    
     # Keeping alive a specific amount of the best karyotypes
     keep_alive_count = Integer(@karyotypes.size * @keep_alive_rate)
+    warn "#{keep_alive_count}"
     if keep_alive_count > 0 then
-      new_population << @karyotypes[0, keep_alive_count]
+      @karyotypes[0, keep_alive_count].each {|karyotype| new_population.push(karyotype)}
     end
+        
     mutation_count = Integer(@karyotypes.size * @mutation_rate)
     (0..mutation_count-1).each {
-      new_population << create_random_mutation
+      new_population.push create_random_mutation
     }
+    
     remaining = @karyotypes.size-mutation_count-keep_alive_count
     (0..remaining-1).each {
       child = random_breed
-      new_population << child
+      new_population.push child      
     }
     @karyotypes = new_population
     evaluate
