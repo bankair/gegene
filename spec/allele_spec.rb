@@ -19,4 +19,9 @@ describe Allele do
     expect(allele.value).to eq 1664
   end
 
+  it 'can be copied' do
+    allele = Allele.new(@gene_mock, 13)
+    allele_copy = allele.copy
+    expect(allele_copy.value).to eq allele.value
+  end
 end

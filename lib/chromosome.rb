@@ -19,7 +19,8 @@ class Chromosome
   end
   
   def mutate
-    @alleles[rand @alleles.size].mutate
+    allele_index = rand @alleles.size
+    @alleles[allele_index].mutate()
   end
   
 end
