@@ -5,7 +5,7 @@ class Karyotype
     @genome = genome
     @chromosomes_description = chromosomes_description
   end
-  
+  private :initialize
   def copy
     karyotype = Karyotype.new(@genome, @chromosomes_description)
     karyotype.chromosomes = self.chromosomes.map{|chromosome| chromosome.copy}
@@ -27,4 +27,7 @@ class Karyotype
     return @chromosomes[chromosome_position][gene_position].value
   end
   
+  def mutate
+    @chromosomes[rand @chromosomes.size].mutate
+  end
 end

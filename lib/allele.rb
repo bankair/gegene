@@ -8,4 +8,9 @@ class Allele
   def mutate
     @value = @gene.mutate(@value)
   end
+  
+  def copy
+    # /!\ if @value is a ref, its underlying object won't be copied
+    Allele.new(@gene, @value)
+  end
 end

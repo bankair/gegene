@@ -7,7 +7,6 @@ class Gene
   def random_allele_value
     raise "the 'random_allele_value' function must be overloaded in the inheriting class."
   end
-
   def create_random
     Allele.new(self, self.random_allele_value)
   end
@@ -21,7 +20,13 @@ class NumericGene < Gene
     @max = max
   end
 
-  def mutate(previous_value) self.random end
+  def mutate(previous_value)
+    next_value = random_allele_value
+    while next_value == previous_value do
+      next_value = random_allele_value
+    end
+    next_value
+  end
 end 
 
 class IntegerGene < NumericGene

@@ -8,15 +8,13 @@ describe Gene do
   it "create an integer allele with a value" do
     gene = Gene.Integer(-20, 20)
     allele = gene.create_random
-    expect(allele.value <= 20)
-    expect(allele.value >= -20)
+    expect(allele.value.between?(-20, 20))
   end
 
   it "create a float allele with a value" do
     gene = Gene.Integer(-2.0, 2.0)
     allele = gene.create_random
-    expect(allele.value <= 2.0)
-    expect(allele.value >= -2.0)
+    expect(allele.value.between?(-2, 2))
   end
 
   it "create an allele from an enum" do
