@@ -31,8 +31,11 @@ warn "a:#{bk[:a]} b:#{bk[:b]} => a*a + b = #{bk[:a]**2+bk[:b]}"
 ```
 
 The result could be :
+
 	a:4 b:-4 => a*a + b = 12
+
 or
+
 	a:3 b:3 => a*a + b = 12
 
 ### Features
