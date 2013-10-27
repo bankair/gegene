@@ -20,14 +20,16 @@ describe Population do
     @karyotype.stub(:mutate){@karyotype}
     @karyotype.stub(:clone){@karyotype}
     @karyotype.stub(:+){@karyotype}
+    @karyotype.stub(:create_random_from){double(Chromosome)}
     @karyotype.stub(:fitness=){nil}
     @karyotype.stub(:fitness){0}
     @genome = double(Genome)
-    @genome.stub(:create_random_karyotype){@karyotype}
+    @fake_gene = double(Gene).stub(:create_random){@karyotype}
+    
   end
 
   it "can be created at a specific size" do
-    population = Population.new(200, @genome, @counter.method(:increment))
+    population = Population.new(200, [{fake: @fake_gene}], @counter.method(:increment))
     expect(population.size).to eq 200
     expect(@counter.value).to eq 200
   end

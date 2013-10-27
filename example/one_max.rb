@@ -15,7 +15,7 @@ end
 # We create a population of six individuals with the previous desc & func:
 population = Population.new(6, genome_description, method(:fitness))
 
-# As we known that the best solution for the one max problem, we set a
+# As we known the best solution for the one max problem, we set a
 # fitness target of 3 (1+1+1).
 population.fitness_target = 3
 
