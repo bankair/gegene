@@ -12,6 +12,7 @@ from http://en.wikipedia.org/wiki/Genetic_algorithm
 In order to offer a fast prototyping framework for genetic algorithm, I created gegene (French shorter for Eugene).
 
 With gegene, all you got to do in order to use genetic algorithms to solve a problem is:
+
 1. define the genome of your solutions in terms of gene type and chromosome organisation (eq: write an array of hashes)
 2. define the way you would like to evaluate each individuals (eq: write a fitness function which takes a karyotype as parameter)
 3. create a population of individuals (eq: instantiates a Population object)
@@ -92,7 +93,7 @@ If your lib path contains gegene, your script should still execute well.
 
 Then, we have to figure out a way to describe the potential solutions to this problem.
 Obviously, there is three variables to this problem (v1, v2 & v3), so we will use a genome containing 3 genes.
-Each of these gene allow 0 or 1 as allele's value, so we will use an integer gene, whose range of values will be [0,1] (do not add this source code to your script for the moment):
+Each of these gene allow 0 or 1 as allele's value, so we will use an integer gene, whose range of values will be [0,1]. Do not add this source code to your script for the moment:
 ```Ruby
 Gene.Integer(0, 1)
 ```
@@ -118,7 +119,7 @@ end
 ```
 
 _Note that each of the karyotype 's allele can be accessed through its gene name_
-The parameter of the fitness function is a karyotype ( http://en.wikipedia.org/wiki/Karyotype ). It contains all the chromosomes of a specific individual of our population.
+The parameter of the fitness function is a [karyotype]( http://en.wikipedia.org/wiki/Karyotype). It contains all the chromosomes of a specific individual of our population.
 
 ### Creating and making a population evolve
 
@@ -148,7 +149,7 @@ Let me introduce to you.... Evolution !
 population.evolve(10)
 ````
 
-In order to examine the best solution found, you can check the array of karyoptypes describing the current population state:
+In order to examine the best solution found, you can check the array of karyotypes (sorted by fitness value) describing the current population state:
 ```Ruby
 # population.karyotypes is sorted by fitness score, so we can assume that
 # the first element is the fittest
