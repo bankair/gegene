@@ -79,7 +79,6 @@ private :random_select, :random_breed
     
     # Keeping alive a specific amount of the best karyotypes
     keep_alive_count = Integer(@karyotypes.size * @keep_alive_rate)
-    warn "#{keep_alive_count}"
     if keep_alive_count > 0 then
       @karyotypes[0, keep_alive_count].each {|karyotype| new_population.push(karyotype)}
     end

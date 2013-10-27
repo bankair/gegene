@@ -179,4 +179,20 @@ More details on the genes
 
 ### Adding new gene types
 
-FIXME: complete this section
+If needed, you are able to add gene type to any project.
+In order to do so, you have to create a class inheriting from the Gene class.
+This class *must* provide implementation for two methods:
+
+````Ruby
+def random_allele_value()
+end
+````
+Create a random value, according to the set of rules you choosed (ex: BooleanGene should return true or false, on a random basis)
+
+````Ruby
+def mutate(previous_value)
+end
+````
+Create a mutated value, which can (but not necessarily) depends on the previous value an allele used to carry.
+
+An example of gene type creation is available in 'example/adding_gene_type.rb'.
