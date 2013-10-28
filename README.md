@@ -24,7 +24,7 @@ Overview
 
 ### Example
 
-In the following code, we use gegene to find a and b so _a*a + b = 12_, with a included in [0,5], and b included in [-5,5]:
+In the following code, we use gegene to find *a* and *b* so _a*a + b = 12_, with *a* included in [0,5], and *b* included in [-5,5]:
 ```Ruby
 require 'gegene'
 FITNESS_TARGET = 1 / 0.001
