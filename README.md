@@ -61,8 +61,6 @@ At this very moment, gegene features:
 
 My next moves will be: 
 
-* Fixing population_spec.rb to match the last updates of population.rb
-* Building my very first gem !
 * Implementing the cross-over mechanism
 * Cleaning, commenting and enhance my ugly beginner's code
 
