@@ -15,21 +15,20 @@ describe Population do
 
   before(:each) do
     @counter = Counter.new
-    @karyotype = double(Karyotype)
-    @karyotype.stub(:breed){@karyotype}
-    @karyotype.stub(:mutate){@karyotype}
-    @karyotype.stub(:clone){@karyotype}
-    @karyotype.stub(:+){@karyotype}
-    @karyotype.stub(:create_random_from){double(Chromosome)}
-    @karyotype.stub(:fitness=){nil}
-    @karyotype.stub(:fitness){0}
-    @genome = double(Genome)
-    @fake_gene = double(Gene).stub(:create_random){@karyotype}
-    
+    @genome = [{dummy_value:Gene.Integer(0,1)}]
+    # @karyotype = double(Karyotype)
+    # @karyotype.stub(:breed){@karyotype}
+    # @karyotype.stub(:mutate){@karyotype}
+    # @karyotype.stub(:clone){@karyotype}
+    # @karyotype.stub(:+){@karyotype}
+    # @karyotype.stub(:create_random_from){double(Chromosome)}
+    # @karyotype.stub(:fitness=){nil}
+    # @karyotype.stub(:fitness){0}
+    # @genome = double(Genome)    
   end
 
   it "can be created at a specific size" do
-    population = Population.new(200, [{fake: @fake_gene}], @counter.method(:increment))
+    population = Population.new(200, @genome, @counter.method(:increment))
     expect(population.size).to eq 200
     expect(@counter.value).to eq 200
   end
@@ -37,13 +36,13 @@ describe Population do
   it "can evolve" do
     population = Population.new(200, @genome, @counter.method(:increment))
     population.evolve()
-    expect(@counter.value).to eq 400
+    expect(@counter.value).to eq 380
   end
 
   it "can evolve several times" do
     population = Population.new(200, @genome, @counter.method(:increment))
     population.evolve(2)
-    expect(@counter.value).to eq 600
+    expect(@counter.value).to eq 560
   end
   
   it "has a mutation rate which default value is 1%" do
@@ -71,16 +70,15 @@ describe Population do
     expect(population.fitness_target.nil?).to be_true
     expect(@counter.value).to eq 200
     population.evolve()
-    expect(@counter.value).to eq 400
+    expect(@counter.value).to eq 380
     population.fitness_target = 99999
     expect(population.fitness_target).to eq 99999
     population.evolve(2)
-    expect(@counter.value).to eq 800
-    set_function_return = population.set_fitness_target(900)
+    expect(@counter.value).to eq 740
+    set_function_return = population.set_fitness_target(200)
     expect(set_function_return).to eq population
-    expect(population.fitness_target).to eq 900
-    @karyotype.stub(:fitness){1000}
+    expect(population.fitness_target).to eq 200
     population.evolve(3)
-    expect(@counter.value).to eq 800
+    expect(@counter.value).to eq 740
   end
 end
