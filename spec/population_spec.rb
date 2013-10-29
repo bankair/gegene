@@ -81,4 +81,21 @@ describe Population do
     population.evolve(3)
     expect(@counter.value).to eq 740
   end
+  
+  it "can force all fitness recalculation" do
+    population = Population.new(200, @genome, @counter.method(:increment))
+    expect(!population.force_fitness_recalculation)
+    expect(@counter.value).to eq 200
+    population.evolve()
+    expect(@counter.value).to eq 380
+    population.force_fitness_recalculation = true
+    expect(population.force_fitness_recalculation)
+    population.evolve(2)
+    expect(@counter.value).to eq 780
+    set_function_return = population.set_force_fitness_recalculation(false)
+    expect(set_function_return).to eq population
+    expect(population.force_fitness_recalculation).to eq false
+    population.evolve(3)
+    expect(@counter.value != 780 + 3 * 200)
+  end
 end
