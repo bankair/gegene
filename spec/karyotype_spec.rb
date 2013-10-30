@@ -35,4 +35,9 @@ describe Karyotype do
     karyotype.mutate
     expect(previous_value != karyotype[:fake_gene_name])
   end
+  
+  it "can concatenate its alleles and provide a md5 hash value out of it" do
+    karyotype = Karyotype.create_random_from(@genome, [[Gene.Integer(0,5)]])
+    expect((0..5).to_a.map{|x|Digest::MD5.hexdigest(x.to_s)}).to include karyotype.to_md5
+  end
 end

@@ -1,4 +1,5 @@
 require 'chromosome'
+require 'digest/md5'
 class Karyotype
   attr_accessor :chromosomes
   attr_accessor :fitness
@@ -36,6 +37,16 @@ class Karyotype
       |chromosome, index| child.chromosomes[index] = chromosome if rand(2) == 0
     }
     child
+  end
+  
+  def to_md5()
+    if (@hash_value.nil?) then
+      @hash_value = @chromosomes.map{ |chromosome|
+        chromosome.aggregated_alleles
+      }.join(";")
+      @hash_value = Digest::MD5.hexdigest(@hash_value)
+    end
+    @hash_value
   end
   
   def mutate

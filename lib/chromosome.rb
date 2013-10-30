@@ -23,4 +23,8 @@ class Chromosome
     @alleles[allele_index].mutate()
   end
   
+  def aggregated_alleles()
+    @alleles.map {|a| a.value}.join(";")
+  end
+  
 end
