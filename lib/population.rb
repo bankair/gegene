@@ -9,18 +9,31 @@ class Population
   attr_accessor :mutation_rate, :keep_alive_rate, :fitness_target, :karyotypes,
     :force_fitness_recalculation
 
-  def evaluate
-    @karyotypes.each do |karyotype|
-      if (@force_fitness_recalculation || karyotype.fitness.nil?) then
-        karyotype.fitness = @fitness_calculator.call(karyotype)
+    def evaluate
+      if @force_fitness_recalculation then
+        @karyotypes.each do |karyotype|
+          karyotype.fitness = @fitness_calculator.call(karyotype)
+          @fitness_hash[karyotype.to_md5()] = karyotype.fitness
+        end
+      else     
+        @karyotypes.each do |karyotype|
+          if karyotype.fitness.nil? then
+            if @fitness_hash[karyotype.to_md5()].nil? then
+              karyotype.fitness = @fitness_calculator.call(karyotype)
+              @fitness_hash[karyotype.to_md5()] = karyotype.fitness
+            else
+              karyotype.fitness = @fitness_hash[karyotype.to_md5()]
+            end
+          end
+        end
       end
+      @karyotypes.sort! { |x,y| y.fitness <=> x.fitness }
     end
-    @karyotypes.sort! { |x,y| y.fitness <=> x.fitness }
-  end
   
   private :evaluate
   
   def initialize(size, genome, fitness_calculator)
+    @fitness_hash = {}
     @force_fitness_recalculation = DEFAULT_FORCE_FITNESS_RECALCULATION
     @mutation_rate = DEFAULT_MUTATION_RATE
     @keep_alive_rate = DEFAULT_KEEP_ALIVE_RATE

@@ -30,19 +30,23 @@ describe Population do
   it "can be created at a specific size" do
     population = Population.new(200, @genome, @counter.method(:increment))
     expect(population.size).to eq 200
-    expect(@counter.value).to eq 200
+    expect(@counter.value).to eq 2
   end
   
   it "can evolve" do
     population = Population.new(200, @genome, @counter.method(:increment))
+    population.force_fitness_recalculation = true
+    expect(@counter.value).to eq 2
     population.evolve()
-    expect(@counter.value).to eq 380
+    expect(@counter.value).to eq 202
   end
 
   it "can evolve several times" do
     population = Population.new(200, @genome, @counter.method(:increment))
+    expect(@counter.value).to eq 2
+    population.force_fitness_recalculation = true
     population.evolve(2)
-    expect(@counter.value).to eq 560
+    expect(@counter.value).to eq 402
   end
   
   it "has a mutation rate which default value is 1%" do
@@ -67,35 +71,36 @@ describe Population do
   
   it "has a fitness target which default value is nil" do
     population = Population.new(200, @genome, @counter.method(:increment))
+    population.force_fitness_recalculation = true
     expect(population.fitness_target.nil?).to be_true
-    expect(@counter.value).to eq 200
+    expect(@counter.value).to eq 2
     population.evolve()
-    expect(@counter.value).to eq 380
+    expect(@counter.value).to eq 202
     population.fitness_target = 99999
     expect(population.fitness_target).to eq 99999
     population.evolve(2)
-    expect(@counter.value).to eq 740
+    expect(@counter.value).to eq 602
     set_function_return = population.set_fitness_target(200)
     expect(set_function_return).to eq population
     expect(population.fitness_target).to eq 200
     population.evolve(3)
-    expect(@counter.value).to eq 740
+    expect(@counter.value).to eq 602
   end
   
   it "can force all fitness recalculation" do
     population = Population.new(200, @genome, @counter.method(:increment))
     expect(!population.force_fitness_recalculation)
-    expect(@counter.value).to eq 200
+    expect(@counter.value).to eq 2
     population.evolve()
-    expect(@counter.value).to eq 380
+    expect(@counter.value).to eq 2
     population.force_fitness_recalculation = true
     expect(population.force_fitness_recalculation)
     population.evolve(2)
-    expect(@counter.value).to eq 780
+    expect(@counter.value).to eq 402
     set_function_return = population.set_force_fitness_recalculation(false)
     expect(set_function_return).to eq population
     expect(population.force_fitness_recalculation).to eq false
     population.evolve(3)
-    expect(@counter.value != 780 + 3 * 200)
+    expect(@counter.value != 402)
   end
 end
