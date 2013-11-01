@@ -54,6 +54,7 @@ At this very moment, gegene features:
 
 * Inheritance
 * Mutation
+* Cross over
 * Non linear selection
 * An optional fitness value cache, to avoid extra computing
 * A pretty cool name
@@ -62,10 +63,7 @@ At this very moment, gegene features:
 
 My next moves will be: 
 
-* Implementing the cross-over mechanism
-* Fool proofing the population class
-* rdoc documentation
-* Cleaning, commenting and enhance my ugly beginner's code
+* your call
 
 Tutorial
 --------
