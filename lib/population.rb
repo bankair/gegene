@@ -97,7 +97,7 @@ class Population
 
   private :linear_random_select, :create_random_mutation
 
-  def random_select
+  def fitness_weighted_random_select
     @karyotypes[
       @karyotypes.size -
         Integer(Math.sqrt(Math.sqrt(1 + rand(@karyotypes.size**4 - 1))))
@@ -105,7 +105,7 @@ class Population
   end
   
   def random_breed
-    random_select + random_select
+    fitness_weighted_random_select + fitness_weighted_random_select
   end
 
   private :random_select, :random_breed
