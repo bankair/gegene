@@ -99,16 +99,24 @@ class Population
 
   def random_select
     @karyotypes[
-      @karyotypes.size - Integer(Math.sqrt(Math.sqrt(1 + rand(@karyotypes.size**4 - 1))))
+      @karyotypes.size -
+        Integer(Math.sqrt(Math.sqrt(1 + rand(@karyotypes.size**4 - 1))))
     ]
   end
-
+  
   def random_breed
     random_select + random_select
   end
 
   private :random_select, :random_breed
 
+  # This function make ou population evolving by:
+  # * Selecting and breeding the fittest karyotypes
+  # * Running the fitness evaluation on all the newly created karyotyopes
+  # The selection process include three subprocesses:
+  # * Selecting the fittest individuals to keep alive
+  # * Mutating randomly (linear) selected individuals
+  # * Breeding randomly (fitness weighted) selected individuals
   def evolve(iterations = DEFAULT_EVOLVE_ITERATIONS)
     i = 1
     while (i <= iterations) &&
