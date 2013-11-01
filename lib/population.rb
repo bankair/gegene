@@ -108,7 +108,7 @@ class Population
     fitness_weighted_random_select + fitness_weighted_random_select
   end
 
-  private :random_select, :random_breed
+  private :fitness_weighted_random_select, :random_breed
 
   # This function make ou population evolving by:
   # * Selecting and breeding the fittest karyotypes
