@@ -37,7 +37,8 @@ class Karyotype
   # We strongly recommand using symbols as gene name
   def [](gene_name)
     return nil if @chromosomes.nil?
-    chromosome_position, gene_position = @genome.get_gene_position(gene_name)
+    chromosome_position, gene_position =
+      @genome.get_gene_position(gene_name)
     return nil if chromosome_position.nil? || gene_position.nil?
     return @chromosomes[chromosome_position][gene_position].value
   end
@@ -45,9 +46,20 @@ class Karyotype
   # Breeding function
   # Create a new karyotype based on self and an other
   def +(other)
-    child = copy
-    other.chromosomes.each_with_index {
-      |chromosome, index| child.chromosomes[index] = chromosome if rand(2) == 0
+    child = Karyotype.new(@genome, @chromosomes_description)
+    child.chromosomes = []
+    other.chromosomes.each_with_index { |chromosome, index|
+      child_chromosome = nil
+      # Randomly copy chromosomes from dad or mom to child
+      if (rand(100) / 100.0) < @genome.cross_over_rate then
+        # Crossing over required
+        child_chromosome =
+          Chromosome.cross_over(chromosome, chromosomes[index])
+      else
+        # Standard breeding via random selection
+        child_chromosome = (rand(2)==0?chromosome : chromosomes[index]).copy
+      end
+      child.chromosomes.push(child_chromosome)
     }
     child
   end

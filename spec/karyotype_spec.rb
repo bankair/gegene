@@ -1,5 +1,5 @@
 require 'karyotype'
-require 'Genome'
+require 'genome'
 
 describe Karyotype do
   
