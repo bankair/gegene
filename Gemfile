@@ -1,4 +1,5 @@
 source "https://rubygems.org"
-gem 'rspec'
-gem 'rspec-mocks'
+gem 'simplecov', :require => false
+gem 'rspec', :require => false
+gem 'rspec-mocks', :require => false
 gemspec
