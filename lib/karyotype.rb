@@ -67,9 +67,7 @@ class Karyotype
   # Aggregate all the allele into a md5 hash value
   def to_md5()
     if (@hash_value.nil?) then
-      @hash_value = @chromosomes.map{ |chromosome|
-        chromosome.aggregated_alleles
-      }.join(";")
+      @hash_value = @chromosomes.map(&:aggregated_alleles).join(';')
       @hash_value = Digest::MD5.hexdigest(@hash_value)
     end
     @hash_value

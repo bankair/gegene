@@ -34,16 +34,16 @@ class Population
     else     
       @karyotypes.each do |karyotype|
         if karyotype.fitness.nil? then
-          if @fitness_hash[karyotype.to_md5()].nil? then
+          if @fitness_hash[karyotype.to_md5].nil? then
             karyotype.fitness = @fitness_calculator.call(karyotype)
-            @fitness_hash[karyotype.to_md5()] = karyotype.fitness
+            @fitness_hash[karyotype.to_md5] = karyotype.fitness
           else
-            karyotype.fitness = @fitness_hash[karyotype.to_md5()]
+            karyotype.fitness = @fitness_hash[karyotype.to_md5]
           end
         end
       end
     end
-    @karyotypes.sort! { |x,y| y.fitness <=> x.fitness }
+    @karyotypes.sort_by(&:fitness)
   end
 
   private :evaluate
@@ -62,7 +62,6 @@ class Population
 
   def set_mutation_rate(rate)
     raise "mutation_rate value must be included in [0,1]" unless rate.between?(0,1)
-    
     @mutation_rate= rate
     self
   end
@@ -128,23 +127,22 @@ class Population
   end
 
   def evolve_impl
-    new_population = []    
-
+    new_population = []
     # Keeping alive a specific amount of the best karyotypes
     keep_alive_count = Integer(@karyotypes.size * @keep_alive_rate)
     if keep_alive_count > 0 then
-      @karyotypes[0, keep_alive_count].each {|karyotype| new_population.push(karyotype)}
+      @karyotypes[0, keep_alive_count].each {|karyotype| new_population << karyotype}
     end
 
     mutation_count = Integer(@karyotypes.size * @mutation_rate)
     (0..mutation_count-1).each {
-      new_population.push create_random_mutation
+      new_population << create_random_mutation
     }
 
     remaining = @karyotypes.size-mutation_count-keep_alive_count
     (0..remaining-1).each {
       child = random_breed
-      new_population.push child      
+      new_population << child      
     }
     @karyotypes = new_population
     evaluate

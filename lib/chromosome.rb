@@ -34,20 +34,18 @@ class Chromosome
   
   # Mutate a randomly selected allele of the current chromosome
   def mutate
-    allele_index = rand @alleles.size
-    @alleles[allele_index].mutate()
+    @alleles[rand @alleles.size].mutate()
   end
   
   # Aggregate all alleles values
   def aggregated_alleles()
-    @alleles.map {|a| a.value}.join(";")
+    @alleles.map {|a| a.value}.join(';')
   end
   
   # Cross over two chromosomes to provide a new one
   def Chromosome.cross_over(chromosome_a, chromosome_b)
     if rand(2) == 0 then
-      chromosome_a, chromosome_b =
-        [chromosome_b, chromosome_a]
+      chromosome_a, chromosome_b = chromosome_b, chromosome_a
     end
     size = chromosome_a.size
     if size < 2 then
