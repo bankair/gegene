@@ -72,7 +72,7 @@ class Population
         update!(karyotype, cached_fitness(karyotype)) if karyotype.fitness.nil?
       end
     end
-    @karyotypes.sort_by(&:fitness)
+    @karyotypes.sort_by! { |karyotype| - karyotype.fitness }
   end
 
   def update!(karyotype, fitness)
