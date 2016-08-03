@@ -1,68 +1,59 @@
 require 'gene'
 require 'allele'
+require 'forwardable'
 
-# This class represent a chromosome, which contains several allele (gene's values)
-# and is able to mutate, and to cross over.
+# This class represent a chromosome, which contains several allele
+# (gene's values) and is able to mutate, and to cross over.
 class Chromosome
-  
+  extend Forwardable
+
+  def_delegators :@alleles, :size, :[], :each_with_index, :map
   # Construct a chromosome from an array of alleles
   def initialize(alleles)
-    raise "this constructor expect an array of alleles as input" unless
-      alleles.is_a?(Array)
+    unless alleles.is_a?(Array)
+      puts alleles.inspect
+      raise 'this constructor expect an array of alleles as input'
+    end
     @alleles = alleles
   end
-  
+
   # Copy the current chromosome and all its alleles
   def copy
-    Chromosome.new(@alleles.map{|allele| allele.copy })
+    Chromosome.new(map(&:copy))
   end
-  
+
   # Create a random chromosome from a description
-  def Chromosome.create_random_from(description)
-    Chromosome.new(description.map{|gene| gene.create_random() })
+  def self.create_random_from(description)
+    new(description.map(&:create_random))
   end
-  
-  # Returns the allele at a specific position
-  def [](gene_position)
-    @alleles[gene_position]
-  end
-  
-  # Number of underlying alleles
-  def size
-    @alleles.size
-  end
-  
+
   # Mutate a randomly selected allele of the current chromosome
   def mutate
-    @alleles[rand @alleles.size].mutate()
+    @alleles[rand size].mutate
   end
-  
+
   # Aggregate all alleles values
-  def aggregated_alleles()
-    @alleles.map {|a| a.value}.join(';')
+  def aggregated_alleles
+    map(&:value).join(';')
   end
-  
+
   # Cross over two chromosomes to provide a new one
-  def Chromosome.cross_over(chromosome_a, chromosome_b)
-    if rand(2) == 0 then
-      chromosome_a, chromosome_b = chromosome_b, chromosome_a
-    end
-    size = chromosome_a.size
-    if size < 2 then
-      return chromosome_a.copy
-    elsif size == 2 then
-      return Chromosome.new([chromosome_a[0],chromosome_b[1]])
-    else
-      swap_index = rand(size-1)
-      index = 0
-      new_alleles = []
-      while (index < size) do
-        new_alleles.push(
-          (index <= swap_index ? chromosome_a : chromosome_b)[index].copy)
-        index += 1
-      end
-      return Chromosome.new(new_alleles)
-    end
+  def self.cross_over(chromo_a, chromo_b)
+    chromo_a, chromo_b = randomize_chromosomes(chromo_a, chromo_b)
+    size = chromo_a.size
+    return chromo_a.copy if size < 2
+    return new([chromo_a[0], chromo_b[1]].map!(&:copy)) if size == 2
+    cross_over_impl(chromo_a, chromo_b, size)
   end
-  
+
+  def self.cross_over_impl(chromosome_a, chromosome_b, size)
+    swap_index = rand(size - 1)
+    new(chromosome_a.each_with_index.map do |from_a, index|
+      (index <= swap_index ? from_a : chromosome_b[index]).copy
+    end)
+  end
+
+  def self.randomize_chromosomes(*chromosomes)
+    chromosomes.sort_by! { rand }
+  end
 end
